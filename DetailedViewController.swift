@@ -10,6 +10,7 @@ import UIKit
 
 class DetailedViewController: UIViewController, UITableViewDelegate, UITableViewDataSource
 {
+     let refreshControl = UIRefreshControl()
     @IBOutlet weak var reply: UITextField!
     @IBOutlet weak var tableView: UITableView!
     var replies: [Tweet] = []
@@ -33,6 +34,8 @@ class DetailedViewController: UIViewController, UITableViewDelegate, UITableView
     override func viewDidLoad()
     {
         super.viewDidLoad()
+         refreshControl.addTarget(self, action: #selector(refreshControlAction(_:)), forControlEvents: UIControlEvents.ValueChanged)
+       tableView.insertSubview(refreshControl, atIndex: 0)
         post.text = tweet!.text as! String
         
         let user = tweet!.user as User
@@ -68,10 +71,11 @@ class DetailedViewController: UIViewController, UITableViewDelegate, UITableView
         label.text = "\(s) Retweets    \(p) Favorites"
        // reply.hidden = true
          loadData()
+        loadData2()
 
     }
     
-    func loadData()
+    func loadData2()
     {
         TwitterClient.sharedInstance.mentions({ (tweets: [Tweet]) -> () in
            
@@ -104,11 +108,63 @@ class DetailedViewController: UIViewController, UITableViewDelegate, UITableView
         
     }
     
+    
+    
+    func loadData()
+    {
+        print(replies)
+        TwitterClient.sharedInstance.getReplies(tweet?.user.screenName as! String, success: { (tweets:[Tweet]) -> () in
+            print(tweets)
+            for tweeti in tweets
+            {
+                var xx: Bool = false
+                for x in self.replies
+                {
+                    if x.text as! String == tweeti.text as! String
+                    {
+                        xx = true
+                    }
+                }
+                if (tweeti.in_reply_to_status_id == (self.tweet!.id as! Int) && xx == false)
+                {
+                    
+                    self.replies.append(tweeti as! Tweet)
+                }
+            }
+            
+            self.tableView.reloadData()
+
+        })
+    
+    { (error: NSError) in
+    print(error.localizedDescription)
+    }
+    self.tableView.reloadData()
+    
+    
+        
+    }
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     @IBAction func reply(sender: AnyObject)
     {
         let user = tweet!.user as User
        // reply.hidden = false
         let x = "@\(user.screenName as! String) " + (reply.text! as String)
+        reply.text! = ""
         if x.characters.count != 0
         {
             
@@ -119,9 +175,10 @@ class DetailedViewController: UIViewController, UITableViewDelegate, UITableView
             print(error.localizedDescription)
         }
         
-        
+        loadData()
+            loadData2()
         self.tableView.reloadData()
-        print(replies)
+      //  print(replies)
       //  reply.hidden = true
 
         }
@@ -171,6 +228,17 @@ class DetailedViewController: UIViewController, UITableViewDelegate, UITableView
     }
     
     
+    func refreshControlAction(refreshControl: UIRefreshControl)
+    {
+        loadData()
+        loadData2()
+         self.tableView.reloadData()
+                refreshControl.endRefreshing()
+        
+        
+    }
+
+    
     @IBAction func faved(sender: AnyObject)
     {
         
@@ -215,15 +283,7 @@ class DetailedViewController: UIViewController, UITableViewDelegate, UITableView
     
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int
     {
-//        if let replies = replies
-//        {
-//            return replies.count
-//        }
-//        else
-//        {
-//            return 0
-//        }
-        return replies.count
+       return replies.count
     }
     
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell
@@ -243,6 +303,8 @@ class DetailedViewController: UIViewController, UITableViewDelegate, UITableView
     {
         super.viewWillAppear(animated)
         loadData()
+        loadData2()
+        self.tableView.reloadData()
     }
    
     

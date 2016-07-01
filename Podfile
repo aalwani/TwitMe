@@ -7,6 +7,7 @@ target 'TwitMe' do
     pod 'AFNetworking', '3.0.0'
     pod 'BDBOAuth1Manager', '2.0.0'
     pod 'NSDate-Time-Ago'
+    pod 'MBProgressHUD'
 
   # Pods for TwitMe
 

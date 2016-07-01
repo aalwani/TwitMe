@@ -14,6 +14,11 @@
 			<key>isShown</key>
 			<false/>
 		</dict>
+		<key>MBProgressHUD.xcscheme</key>
+		<dict>
+			<key>isShown</key>
+			<false/>
+		</dict>
 		<key>NSDate-Time-Ago.xcscheme</key>
 		<dict>
 			<key>isShown</key>
@@ -52,17 +57,22 @@
 			<key>primary</key>
 			<true/>
 		</dict>
+		<key>72C7F9173041354DE2870E2CA9E4C911</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
 		<key>923A589FD02242E8677B131F28AD1BAB</key>
 		<dict>
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>C194B4FFB05888A7A3D67B55B70BDB1A</key>
+		<key>D205B1E7ED80B441B7782917245BE15B</key>
 		<dict>
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>D205B1E7ED80B441B7782917245BE15B</key>
+		<key>E61CE3B6DFA1FE6B3E296965C76C0E10</key>
 		<dict>
 			<key>primary</key>
 			<true/>

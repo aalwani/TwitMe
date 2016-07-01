@@ -81,7 +81,26 @@ class TwitterClient: BDBOAuth1SessionManager
 
 
 
+    func getReplies(screenname: String, success: ([Tweet]) -> (), failure: (NSError) -> ())
+    {
+        let parameters = ["q" : "@" + screenname]
+        GET("1.1/search/tweets.json", parameters: parameters, success: { (task: NSURLSessionDataTask, response: AnyObject?) in
+            
+            let responseDictionary = response as! NSDictionary
+            let arrayOfTweets = responseDictionary["statuses"] as! [NSDictionary]
+             let tweets = Tweet.tweetsWithArray(arrayOfTweets)
+            success(tweets)
+            
 
+            
+            },
+            failure: { (task: NSURLSessionDataTask?, error: NSError) in
+                failure(error)
+        })
+
+    }
+    
+    
     
 
     

@@ -9,13 +9,15 @@
 import UIKit
 import AFNetworking
 
+
 class TweetsViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, UIScrollViewDelegate
 {
     var count: Int = 20
     
 var userMe: User?
-//  var isMoreDataLoading = false
-//  var loadingMoreView: InfiniteScrollActivityView?
+  var isMoreDataLoading = false
+    let refreshControl = UIRefreshControl()
+  var loadingMoreView: InfiniteScrollActivityView?
     @IBOutlet weak var tableView: UITableView!
     var tweets: [Tweet]!
     
@@ -23,13 +25,13 @@ var userMe: User?
         super.viewDidLoad()
         
         
-        let refreshControl = UIRefreshControl()
+        
         refreshControl.addTarget(self, action: #selector(refreshControlAction(_:)), forControlEvents: UIControlEvents.ValueChanged)
         
-//        let frame = CGRectMake(0, tableView.contentSize.height, tableView.bounds.size.width, InfiniteScrollActivityView.defaultHeight)
-//        loadingMoreView = InfiniteScrollActivityView(frame: frame)
-//        loadingMoreView!.hidden = true
-//        tableView.addSubview(loadingMoreView!)
+        let frame = CGRectMake(0, tableView.contentSize.height, tableView.bounds.size.width, InfiniteScrollActivityView.defaultHeight)
+        loadingMoreView = InfiniteScrollActivityView(frame: frame)
+        loadingMoreView!.hidden = true
+        tableView.addSubview(loadingMoreView!)
         
         var insets = tableView.contentInset;
         insets.bottom += InfiniteScrollActivityView.defaultHeight;
@@ -50,8 +52,9 @@ var userMe: User?
     
     func loadData()
     {
+               
         TwitterClient.sharedInstance.homeTimeLine(count, success: { (tweets: [Tweet]) -> () in
-            self.tweets = tweets
+                        self.tweets = tweets
             self.tableView.reloadData()
             
             //            for tweet in tweets
@@ -61,11 +64,6 @@ var userMe: User?
         }) { (error: NSError) in
             print(error.localizedDescription)
         }
-//        self.isMoreDataLoading = false
-//        self.loadingMoreView!.stopAnimating()
-        tableView.reloadData()
-        
-        
         
         
         TwitterClient.sharedInstance.currentAccount({ (user: User) -> () in
@@ -78,7 +76,14 @@ var userMe: User?
         { (error: NSError) in
             print(error.localizedDescription)
         }
+       
+        self.refreshControl.endRefreshing()
+        self.loadingMoreView!.stopAnimating()
+        tableView.reloadData()
+        self.isMoreDataLoading = false
         
+        
+
 
     }
     override func didReceiveMemoryWarning() {
@@ -90,9 +95,14 @@ var userMe: User?
     {
         super.viewWillAppear(animated)
         loadData()
+        tableView.reloadData()
     }
 
-   
+    override func viewDidAppear(animated: Bool) {
+        super.viewDidAppear(animated)
+        loadData()
+        tableView.reloadData()
+    }
     
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int
     {
@@ -123,36 +133,37 @@ var userMe: User?
     func refreshControlAction(refreshControl: UIRefreshControl)
     {
         loadData()
-        self.tableView.reloadData()
-        refreshControl.endRefreshing()
+       // self.tableView.reloadData()
+//        refreshControl.endRefreshing()
         
         
     }
     
        
     
-//    
-//    func scrollViewDidScroll(scrollView: UIScrollView) {
-//        
-//        if (!isMoreDataLoading) {
-//            // Calculate the position of one screen length before the bottom of the results
-//            let scrollViewContentHeight = tableView.contentSize.height
-//            let scrollOffsetThreshold = scrollViewContentHeight - tableView.bounds.size.height
-//            
-//            // When the user has scrolled past the threshold, start requesting
-//            if(scrollView.contentOffset.y > scrollOffsetThreshold && tableView.dragging) {
-//                isMoreDataLoading = true
-//                let frame = CGRectMake(0, tableView.contentSize.height, tableView.bounds.size.width, InfiniteScrollActivityView.defaultHeight)
-//                loadingMoreView?.frame = frame
-//                loadingMoreView.startAniming()
-//
-//                loadData()
-//                // ... Code to load more results ...
-//            }
-//        }
-//    }
     
-     
+    func scrollViewDidScroll(scrollView: UIScrollView) {
+        
+        if (!isMoreDataLoading) {
+            //            // Calculate the position of one screen length before the bottom of the results
+            let scrollViewContentHeight = tableView.contentSize.height
+            let scrollOffsetThreshold = scrollViewContentHeight - tableView.bounds.size.height
+//
+//            // When the user has scrolled past the threshold, start requesting
+            if(scrollView.contentOffset.y > scrollOffsetThreshold && tableView.dragging) {
+                isMoreDataLoading = true
+               
+                let frame = CGRectMake(0, tableView.contentSize.height, tableView.bounds.size.width, InfiniteScrollActivityView.defaultHeight)
+                loadingMoreView?.frame = frame
+                loadingMoreView?.startAnimating()
+                 count = count + 5
+                loadData()
+//                // ... Code to load more results ...
+            }
+        }
+    }
+    
+    
      // When the user has scrolled past the threshold, start requesting
      
     @IBAction func pushed(sender: AnyObject)

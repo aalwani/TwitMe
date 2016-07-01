@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import MBProgressHUD
 
 class composeViewController: UIViewController
 {
@@ -35,13 +36,17 @@ class composeViewController: UIViewController
             print("sorry bro")
         }
         else if(post?.characters.count <= 140)
-        {
-            TwitterClient.sharedInstance.tweet(post!, success: { (tweet: Tweet) in
-                
+        {   MBProgressHUD.showHUDAddedTo(self.view, animated: true)
+
+                         TwitterClient.sharedInstance.tweet(post!, success: { (tweet: Tweet) in
+                           
+
             })
             { (error: NSError) in
                 print(error.localizedDescription)
             }
+             MBProgressHUD.hideHUDForView(self.view, animated: true)
+            
             performSegueWithIdentifier("tweeted", sender: nil)
             print("sucess tweet")
             
@@ -85,7 +90,8 @@ class composeViewController: UIViewController
         {
             let nav = segue.destinationViewController as! UINavigationController
             let tab = nav.topViewController as! UITabBarController
-            let destVC = tab.viewControllers![0] as! TweetsViewController
+            //let destVC = tab.viewControllers![0] as! TweetsViewController
+            tab.selectedIndex = 0
             
         }
     }
