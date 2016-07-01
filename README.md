@@ -51,7 +51,7 @@ Please list two areas of the assignment you'd like to **discuss further with you
 Here's a walkthrough of implemented user stories:
 
 <img src='http://i.imgur.com/Yv3y2I2.gif' title='Video Walkthrough' width='' alt='Video Walkthrough' />
-<img src='http://i.imgur.com/JtTraK2.gif' title='Video Walkthrough' width='' alt='Video Walkthrough' />
+<img src='http://i.imgur.com/V8Tbr5v.gif' title='Video Walkthrough' width='' alt='Video Walkthrough' />
 <img src='http://i.imgur.com/TPbvlg8.gif  ' title='Video Walkthrough' width='' alt='Video Walkthrough' />
 <img src='http://i.imgur.com/GF2wVtZ.gif' title='Video Walkthrough' width='' alt='Video Walkthrough' />
 <img src='http://i.imgur.com/GtFq4hn.gif' title='Video Walkthrough' width='' alt='Video Walkthrough' />
